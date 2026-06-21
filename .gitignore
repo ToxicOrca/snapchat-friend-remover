@@ -1,0 +1,12 @@
+friends.txt
+following.txt
+protected.txt
+protected.txt.bak
+config.json
+*.bak
+__pycache__/
+*.pyc
+window_dump.xml
+probe_screen.png
+following_edit.png
+snap_probe.py
