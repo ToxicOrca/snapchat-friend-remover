@@ -500,7 +500,7 @@ def run_unfollow_batch(cap, dmin, dmax, log=print, should_stop=lambda: False, on
         return 0, list(drops.values())
     set_dnd(True)
     stay_awake(True)
-    removed, done, blank = 0, set(), 0
+    removed, done, succeeded, blank = 0, set(), set(), 0
     try:
         ns = dump()
         if not at_following_list(ns):
@@ -539,6 +539,7 @@ def run_unfollow_batch(cap, dmin, dmax, log=print, should_stop=lambda: False, on
             log(f"[{removed + 1}/{cap}] unfollowing {name} ...")
             if unfollow_current(target, log):
                 removed += 1
+                succeeded.add(name.strip().lower())
                 log(f"    done ({removed})")
                 if on_progress:
                     on_progress(removed, cap)
@@ -549,7 +550,7 @@ def run_unfollow_batch(cap, dmin, dmax, log=print, should_stop=lambda: False, on
     finally:
         set_dnd(False)
         stay_awake(False)
-    remaining = [drops[k] for k in drops if k not in done]
+    remaining = [drops[k] for k in drops if k not in succeeded]
     return removed, remaining
 
 
@@ -666,7 +667,7 @@ def run_batch(cap, dmin, dmax, log=print, should_stop=lambda: False, on_progress
         return 0, []
     set_dnd(True)
     stay_awake(True)
-    removed, done, blank = 0, set(), 0
+    removed, done, succeeded, blank = 0, set(), set(), 0
     try:
         while removed < cap and len(done) < len(drops) and not should_stop():
             if not dump():
@@ -688,6 +689,7 @@ def run_batch(cap, dmin, dmax, log=print, should_stop=lambda: False, on_progress
             time.sleep(0.5)
             if remove_current(name, interactive=False, log=log):
                 removed += 1
+                succeeded.add(name.strip().lower())
                 log(f"    done ({removed})")
                 if on_progress:
                     on_progress(removed, cap)
@@ -699,7 +701,7 @@ def run_batch(cap, dmin, dmax, log=print, should_stop=lambda: False, on_progress
     finally:
         set_dnd(False)
         stay_awake(False)
-    remaining = [drops[k] for k in drops if k not in done]
+    remaining = [drops[k] for k in drops if k not in succeeded]
     return removed, remaining
 
 
