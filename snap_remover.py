@@ -550,6 +550,12 @@ def run_unfollow_batch(cap, dmin, dmax, log=print, should_stop=lambda: False, on
     finally:
         set_dnd(False)
         stay_awake(False)
+    if succeeded:
+        roster = load_following()
+        for k in succeeded:
+            if k in roster:
+                roster[k] = ("keep", roster[k][1])
+        write_following(roster)
     remaining = [drops[k] for k in drops if k not in succeeded]
     return removed, remaining
 
@@ -701,6 +707,12 @@ def run_batch(cap, dmin, dmax, log=print, should_stop=lambda: False, on_progress
     finally:
         set_dnd(False)
         stay_awake(False)
+    if succeeded:
+        roster = load_roster()
+        for k in succeeded:
+            if k in roster:
+                roster[k] = ("keep", roster[k][1])
+        write_roster(roster)
     remaining = [drops[k] for k in drops if k not in succeeded]
     return removed, remaining
 
